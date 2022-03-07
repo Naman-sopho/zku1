@@ -3,7 +3,7 @@ circom merkleRoot.circom --r1cs --wasm --sym --c
 
 # compute witness
 cd merkleRoot_js
-node generate_witness.js merkleRoot.wasm ../input.json ../witness.wtns
+node generate_witness.js merkleRoot.wasm ./input.json ../witness.wtns
 
 cd ..
 
