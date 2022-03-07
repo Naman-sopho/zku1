@@ -3,8 +3,8 @@ import { ethers } from 'ethers';
 import './App.css';
 import contract from './contracts/ZKUTokenWithMerkleTree.json';
 
-const MERKLE_TREE_ADDRESS = "0x45904A05BA393d1B341fceAb72f56BaaC03b199B";
-const ZKU_TOKEN_WITH_MERKLE_TREE_ADDRESS = "0x4373967A68d67bc5783ac4329692032fb2c4DFf0";
+const MERKLE_TREE_ADDRESS = "0x39Fa96f5bC6D9DA5F30bCbFF0D0Fd9e976e85c9a";
+const ZKU_TOKEN_WITH_MERKLE_TREE_ADDRESS = "0x80878c0fAe3F64f65dd06d1e49608bBCFf049748";
 const ABI = contract.abi;
 
 function App() {
@@ -42,6 +42,26 @@ function App() {
     }
   }
 
+  const generateProof = async (leaves) => {
+    console.log(leaves);
+    const snarkjs = require('snarkjs');
+    const fs = require('fs');
+    const { proof, publicSignals } = await snarkjs.groth16.fullProve({leaves: leaves}, "circuit.wasm", "circuit_final.zkey");
+
+    console.log("Proof: ");
+    console.log(JSON.stringify(proof, null, 1));
+
+    const vKey = JSON.parse(fs.readFileSync("verification_key.json"));
+
+    const res = await snarkjs.groth16.verify(vKey, publicSignals, proof);
+
+    if (res === true) {
+        console.log("Verification OK");
+    } else {
+        console.log("Invalid proof");
+    }
+  }
+
   const mintNftHandler = async () => {
     setMessage("Working on it...."); 
     try {
@@ -54,9 +74,14 @@ function App() {
 
         let transaction = await zkuTokenWithMerkleTree.awardItem(receiver, MERKLE_TREE_ADDRESS);
 
+        zkuTokenWithMerkleTree.on('MerkleLeaves', (leaves) => {
+          setMessage(message + `\n Merkle Tree Leaves generated`);
+          generateProof(leaves);
+        });
+
         await transaction.wait();
 
-        setMessage(`NFT Minted: https://rinkeby.etherscan.io/tx/${transaction.hash}`);
+        setMessage(`NFT Minted: <href a="https://rinkeby.etherscan.io/tx/${transaction.hash}"/>`);
       }
     } catch (err) {
       setMessage("An error has occured");

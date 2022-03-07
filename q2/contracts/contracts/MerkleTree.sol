@@ -5,7 +5,7 @@ pragma solidity ^0.8.10;
 contract MerkleTree {
     bytes32[] public hashes;
 
-    function generateTree(string[4] memory transactions) public {
+    function generateTree(string[4] memory transactions) public returns (bytes32[4] memory) {
         uint n = transactions.length;
 
         // we cannot skip anything if the hashes array is empty
@@ -57,6 +57,8 @@ contract MerkleTree {
                 n = n / 2;
             }
         }
+
+        return [hashes[0], hashes[1], hashes[2], hashes[3]];
     }
 
     function getRoot() public view returns (bytes32) {

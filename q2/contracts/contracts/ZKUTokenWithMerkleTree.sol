@@ -10,6 +10,7 @@ import "./MerkleTree.sol";
 
 contract ZKUTokenWithMerkleTree is ERC721URIStorage {
     using Counters for Counters.Counter;
+    event MerkleLeaves(bytes32[4] leaves);
     
     // to keep track of tokens already issued
     // Counter gives an easy way to generate/increment addresses
@@ -75,7 +76,7 @@ contract ZKUTokenWithMerkleTree is ERC721URIStorage {
             Strings.toString(newItemId), 
             uri
         ];
-        MerkleTree(_merkleTree).generateTree(params);
+        emit MerkleLeaves(MerkleTree(_merkleTree).generateTree(params));
 
         return newItemId;
     }

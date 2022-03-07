@@ -16,6 +16,10 @@ async function main() {
   // Sample run
   // MerkleTree:  0x45904A05BA393d1B341fceAb72f56BaaC03b199B
   // ZKUTokenWithMerkleTree:  0x4373967A68d67bc5783ac4329692032fb2c4DFf0
+  // Contracts which return the leaves
+  // MerkleTree:  0x39Fa96f5bC6D9DA5F30bCbFF0D0Fd9e976e85c9a
+  // ZKUTokenWithMerkleTree:  0x80878c0fAe3F64f65dd06d1e49608bBCFf049748
+
 }
 
 main()
